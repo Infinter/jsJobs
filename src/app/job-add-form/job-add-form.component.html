@@ -1,6 +1,10 @@
 <div class="panel-body">
   <form [formGroup]="form" (ngSubmit)="createJob()">
     <div class="form-group col-sm-6">
+      
+        <label for="company">Entreprise</label>
+        <input type="text" name="company" class="form-control" placeholder="Nom de votre entreprise" formControlName="company">
+  
       <label for="title">Titre</label>
       <input type="text"
               name="title"
@@ -8,9 +12,6 @@
               placeholder="Titre de votre annonce"
               formControlName="title"
       >
-
-      <label for="company">Entreprise</label>
-      <input type="text" name="company" class="form-control" placeholder="Nom de votre entreprise" formControlName="company">
 
       <label for="city">Ville</label>
       <input type="text" name="city" class="form-control" placeholder="Ville" formControlName="city">
