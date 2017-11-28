@@ -9,24 +9,29 @@ import { error } from 'util';
 })
 export class JobListComponent implements OnInit {
 
-  jobs =  [];
+  jobs = [];
   error = '';
 
   constructor(private jobService: JobService) { }
 
   ngOnInit() {
     this.jobService.getJobs()
-                   .subscribe(
-                     data => {
-                       this.jobs = data;
-                       
-                     },
-                     error => {
-                       console.error(error);
-                       this.error = error
-                     }
-                    );
+      .subscribe(
+      data => {
+        this.jobs = data;
+
+      },
+      error => {
+        console.error(error);
+        this.error = error
+      }
+      );
+
+    this.jobService.jobsSubject.subscribe(data => {
+      console.log(data);
+      this.jobs = [data, ...this.jobs];
+    }
+    )
   }
 
 }
- 
