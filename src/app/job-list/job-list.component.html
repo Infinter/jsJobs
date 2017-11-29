@@ -1,7 +1,17 @@
-<div *ngFor="let job of jobs">
-    {{ job.title }}
+<div *ngFor="let job of jobs" class="panel panel-warning">
 
-    <div>
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ job.title }}
+        </h3>
+        <div>{{job.company}} - {{job.city}} - {{ job.zipcode }}</div>
+    </div>
+    
+    <div class="panel-body">
+        {{job.description}}
+    </div>
+
+    <div class="panel-footer panel-warning clear">
         Parue il y a {{job.publishdate | daysAgo}}
     </div>
 </div>
