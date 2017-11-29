@@ -37,7 +37,7 @@ export class JobService {
 
   addJob(jobData) {
     jobData.id = Date.now();
-    this.jobs = [jobData, ...this.jobs]
+    this.jobs = [jobData, ...this.jobs];
     return this.jobsSubject.next(jobData);
   }
 
