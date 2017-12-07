@@ -2,7 +2,7 @@
 
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ job.title }}
+            <a href="#" [routerLink]="['/jobs', job.id]">{{ job.title }}</a>
         </h3>
         <div>{{job.company}} - {{job.city}} - {{ job.zipcode }}</div>
     </div>
