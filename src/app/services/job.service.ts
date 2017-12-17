@@ -10,6 +10,7 @@ export class JobService {
   initialJobs = [];
   jobs = [];
   jobsSubject = new Subject();
+  searchResultSubject = new Subject();
 
   BASE_URL = 'http://localhost:4201/';
 
@@ -22,8 +23,6 @@ export class JobService {
 
   addJob(jobData) {
     jobData.id = Date.now();
-    //this.jobs = [jobData, ...this.jobs];
-    //return this.jobsSubject.next(jobData);
     return this.http.post(this.BASE_URL + 'api/jobs', jobData)
       .map(res => {
         console.log(res)
@@ -34,5 +33,11 @@ export class JobService {
   getJob(id) {
     return this.http.get(this.BASE_URL + `api/jobs/${id}`)
       .map(res => res.json());
+  }
+
+  searchJob(criteria) {
+    return this.http.get(`${this.BASE_URL}api/search/${criteria.term}/${criteria.place}`)
+      .map(res => res.json())
+      .do(res => this.searchResultSubject.next(res));
   }
 }

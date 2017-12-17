@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { JobService } from '../services/job.service'
 
 @Component({
   selector: 'sooz-search',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-  constructor() { }
+  jobs = [];
+
+  constructor(private jobService: JobService) { }
 
   ngOnInit() {
   }
 
+  searchJobs(searchData) {
+    this.jobService.searchJob(searchData)
+      .subscribe(data => this.jobs = data,
+                 error => console.error(error))
+  }
 }

@@ -15,6 +15,18 @@
         <li>
           <a href="#" routerLink="/about">A propos</a>
         </li>
+        <li>
+          <a href="#" routerLink="/login" *ngIf='!authService.userIsLoggedIn()'>Se connecter</a>
+        </li>
+        <li>
+          <a href="#" routerLink="/profile" *ngIf='authService.userIsLoggedIn()'>Mon profil</a>
+        </li>
+        <li>
+          <a href="#" (click)='authService.logOut()' *ngIf='authService.userIsLoggedIn()'>Se déconnecter</a>
+        </li>
+        <li>
+          <a href="#" routerLink='/register' *ngIf='!authService.userIsLoggedIn()'>Créer un compte</a>
+        </li>
       </ul>
     </div>
   </div>

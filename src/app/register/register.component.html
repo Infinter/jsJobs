@@ -1,0 +1,16 @@
+<div><!--*ngIf="!authService.userIsLoggedIn()">-->
+  <h3>Créer un compte</h3>
+  <form #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
+    <input type="text" class="register-input" ngModel name="email" placeholder="Email" required><br><br>
+    <input type="text" class="register-input" ngModel name="nickname" placeholder="Pseudo" required><br><br>
+    <input type="password" class="register-input" ngModel name="password" placeholder="Mot de Passe" required><br><br>
+    <input type="password" class="register-input" ngModel name="confirm-password" placeholder="Confirmer le mot de Passe" required><br><br>
+    <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">Se connecter</button>
+  </form>
+</div>
+<!--<div *ngIf="authService.userIsLoggedIn()">
+  {{ welcomeMessage }}
+  <pre>
+  {{ jbbData | json }}
+  </pre>
+</div>-->
