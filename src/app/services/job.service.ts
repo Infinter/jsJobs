@@ -13,20 +13,26 @@ export class JobService {
   jobsSubject = new Subject();
   searchResultSubject = new Subject();
 
-  BASE_URL = 'http://localhost:4201/';
+  BASE_URL = 'http://localhost:4201';
 
   constructor(private http: Http, private authService: AuthService) { }
 
   getJobs() {
-    return this.http.get(this.BASE_URL + 'api/jobs')
+    return this.http.get(this.BASE_URL + '/api/jobs')
       .map(res => res.json());
   }
+
+  getJobsByUserEmail(userEmail) {
+    return this.http.get(`${this.BASE_URL}/api/jobs/${userEmail}`)
+      .map(res => res.json());
+  }
+
 
   addJob(jobData, token) {
     jobData.id = Date.now();
     const requestOptions = this.authService.addAuthorizationHeader(token);
 
-    return this.http.post(this.BASE_URL + 'api/jobs', jobData, requestOptions)
+    return this.http.post(`${this.BASE_URL}/api/jobs/`, jobData, requestOptions)
       .map(res => {
         console.log(res)
         this.jobsSubject.next(jobData);
@@ -34,12 +40,12 @@ export class JobService {
   }
 
   getJob(id) {
-    return this.http.get(this.BASE_URL + `api/jobs/${id}`)
+    return this.http.get(`${this.BASE_URL}/api/jobs/${id}`)
       .map(res => res.json());
   }
 
   searchJob(criteria) {
-    return this.http.get(`${this.BASE_URL}api/search/${criteria.term}/${criteria.place}`)
+    return this.http.get(`${this.BASE_URL}/api/search/${criteria.term}/${criteria.place}`)
       .map(res => res.json())
       .do(res => this.searchResultSubject.next(res));
   }

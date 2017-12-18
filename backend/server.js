@@ -41,7 +41,7 @@ auth.post('/login', (req, res) => {
             if (user.email === 'su@test.fr') {
                 tokenRole = 'admin';
             }
-            const token = jwt.sign({ iss: 'http://localhost:4201', role: tokenRole, email: req.body.email }, secret);
+            const token = jwt.sign({ iss: 'http://localhost:4201', role: tokenRole, email: req.body.email, nickname: user.nickname }, secret);
             res.json({ success: true, token });
         } else {
             res.status(401).json({ success: false, message: 'identifiants incorrects' });
@@ -57,7 +57,7 @@ auth.post('/register', (req, res) => {
         const email = req.body.email.toLocaleLowerCase().trim();
         const password = req.body.password;
         const nickname = req.body.nickname.trim();
-        users = [{ id: Date.now(), email, password }, ...users];
+        users = [{ id: Date.now(), email, password, nickname }, ...users];
         res.json({ success: true, users });
     } else {
         res.json({ success: false, message: 'La création a écouché.' })
@@ -67,6 +67,12 @@ auth.post('/register', (req, res) => {
 api.get('/jobs', (req, res) => {
     res.json(getAllJobs());
 
+});
+
+api.get('/jobs/:email', (req, res) => {
+    const email = req.params.email;
+    const jobs = getAllJobs().filter(job => job.email == email);
+    res.json({ success: true, jobs });
 });
 
 const checkUserToken = (req, res, next) => {

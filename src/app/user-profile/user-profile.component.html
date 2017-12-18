@@ -6,9 +6,20 @@
 </div>
 
 <div *ngIf="isAdmin">
-  Je suis tout puissant.
+  <h2>Profil de {{ decodedToken.nickname }}</h2>
 </div>
 
 <div *ngIf="!isAdmin">
-  Je suis un utilisateur de base.
+  <h2>Profil de {{ decodedToken.nickname }}</h2>
+</div>
+<div *ngFor="let job of userJobs">
+  <div>
+    <strong>{{ job.title }}</strong>
+    <br> Publiée il y a {{ job.publishdate | daysAgo }}
+    <br> Dernière mise à jour il y a {{ job.lastupdate | daysAgo }}
+  </div>
+  <div>
+    {{ job.description | truncate :35 }}
+  </div>
+  <br>
 </div>
