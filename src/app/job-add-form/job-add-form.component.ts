@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { JobService } from '../services/job.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'sooz-job-add-form',
@@ -10,7 +11,7 @@ import { JobService } from '../services/job.service';
 export class JobAddFormComponent implements OnInit {
 
   form: FormGroup;
-
+  userIsLoggedIn = false;
   contractTypes = [
       {id: 1, name:'Stage', value:'internship'},
       {id: 2, name:'Intérim', value:'temp'},
@@ -46,9 +47,10 @@ export class JobAddFormComponent implements OnInit {
 
 
 
-  constructor(private formBuidler:FormBuilder, private jobService: JobService) { }
+  constructor(private formBuidler:FormBuilder, private jobService: JobService, private authService: AuthService) { }
 
   ngOnInit() {
+    this.checkUserIsLoggedIn();
     this.form = this.formBuidler.group({
       id: -1,
       title: '',
@@ -70,8 +72,16 @@ export class JobAddFormComponent implements OnInit {
   }
 
   createJob(jobData) {
-    this.jobService.addJob(jobData).subscribe();
+    const token = JSON.parse(localStorage.getItem('jbb-data')).token;
+    this.jobService.addJob(jobData, token).subscribe();
+
+
     this.form.reset();
   }
 
+  checkUserIsLoggedIn(){
+    if (this.authService.userIsLoggedIn()){
+      this.userIsLoggedIn = true;
+    }
+  }
 }

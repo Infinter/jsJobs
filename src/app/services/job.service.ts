@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import { Subject } from "rxjs/Rx";
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from './auth.service'
 
 @Injectable()
 export class JobService {
@@ -14,16 +15,18 @@ export class JobService {
 
   BASE_URL = 'http://localhost:4201/';
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private authService: AuthService) { }
 
   getJobs() {
     return this.http.get(this.BASE_URL + 'api/jobs')
       .map(res => res.json());
   }
 
-  addJob(jobData) {
+  addJob(jobData, token) {
     jobData.id = Date.now();
-    return this.http.post(this.BASE_URL + 'api/jobs', jobData)
+    const requestOptions = this.authService.addAuthorizationHeader(token);
+
+    return this.http.post(this.BASE_URL + 'api/jobs', jobData, requestOptions)
       .map(res => {
         console.log(res)
         this.jobsSubject.next(jobData);

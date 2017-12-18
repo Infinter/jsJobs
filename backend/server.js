@@ -5,7 +5,10 @@ let data = require('./jobs');
 
 let initialJobs = data.jobs;
 let addedJobs = [];
-let users = [{ id: "1", email: 'su@test.fr', nickname: 'Super User', password: 'aze' }];
+let users = [
+    { id: "1", email: 'su@test.fr', nickname: 'Super User', password: 'aze', role: 'admin' },
+    { id: "2", email: 'user@test.fr', nickname: 'User', password: 'user', role: 'user' }
+];
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 const jwt = require('jsonwebtoken');
 
@@ -18,7 +21,7 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 })
 
@@ -33,7 +36,12 @@ auth.post('/login', (req, res) => {
         const password = req.body.password.toLocaleLowerCase();
         const index = users.findIndex(user => user.email === email);
         if (index > -1 && users[index].password === password) {
-            const token = jwt.sign({ iss: 'http://localhost:4201', role: 'admin', email: req.body.email }, secret);
+            let tokenRole = 'user';
+            let user = users[index];
+            if (user.email === 'su@test.fr') {
+                tokenRole = 'admin';
+            }
+            const token = jwt.sign({ iss: 'http://localhost:4201', role: tokenRole, email: req.body.email }, secret);
             res.json({ success: true, token });
         } else {
             res.status(401).json({ success: false, message: 'identifiants incorrects' });
@@ -61,7 +69,25 @@ api.get('/jobs', (req, res) => {
 
 });
 
-api.post('/jobs', (req, res) => {
+const checkUserToken = (req, res, next) => {
+    // Authorization: Bearer 'token'
+    if (!req.header('Authorization')) {
+        return res.status(401).json({ sucess: false, message: "Header d'authentification manquant!" });
+    }
+
+    const authorizationParts = req.header('Authorization').split(' ');
+    let token = authorizationParts[1];
+    const decodedToken = jwt.verify(token, secret, (err, decodedToken) => {
+        if (err) {
+            return res.status(401).json({ success: false, message: 'Token non valide' });
+        } else {
+            next();
+        }
+    });
+
+}
+
+api.post('/jobs', checkUserToken, (req, res) => {
     const job = req.body;
     addedJobs = [job, ...addedJobs];
     console.log('total of jobs ' + getAllJobs().length);

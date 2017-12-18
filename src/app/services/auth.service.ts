@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import * as jwtDecode from 'jwt-decode';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AuthService {
   }
 
   userIsLoggedIn() {
-    return localStorage.getItem('jbb-data');
+    return !!localStorage.getItem('jbb-data');
   }
 
   logOut() {
@@ -27,6 +27,14 @@ export class AuthService {
 
     return this.http.post(`${this.BASE_URL}/register`, credentials)
       .map(res => res.json());
+  }
+
+  addAuthorizationHeader(token) {
+    // "Authorization": "Bearer 'token'"
+    const authorizationHeader = new Headers({
+      'Authorization': 'Bearer ' + token
+    })
+    return new RequestOptions({ headers: authorizationHeader });
   }
 
   decodeToken(token) {
